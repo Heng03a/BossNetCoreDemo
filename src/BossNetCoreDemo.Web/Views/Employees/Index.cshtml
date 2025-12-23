@@ -1,0 +1,23 @@
+@model IEnumerable<BossNetCoreDemo.Domain.Entities.Employee>
+
+<h2>Employees</h2>
+
+<table border="1" cellpadding="5">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Basic Pay</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var emp in Model)
+    {
+        <tr>
+            <td>@emp.Id</td>
+            <td>@emp.Name</td>
+            <td>@emp.BasicPay</td>
+        </tr>
+    }
+    </tbody>
+</table>

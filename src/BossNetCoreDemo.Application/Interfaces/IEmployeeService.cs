@@ -1,0 +1,13 @@
+using BossNetCoreDemo.Domain.Entities;
+
+namespace BossNetCoreDemo.Application.Interfaces
+{
+    public interface IEmployeeService
+    {
+        Task<IEnumerable<Employee>> GetAllAsync();
+        Task<Employee?> GetByIdAsync(int id);
+        Task CreateAsync(Employee employee);
+        Task UpdateAsync(Employee employee);
+        Task DeleteAsync(int id);
+    }
+}
