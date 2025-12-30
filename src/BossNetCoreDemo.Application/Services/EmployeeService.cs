@@ -1,41 +1,44 @@
 using BossNetCoreDemo.Application.Interfaces;
 using BossNetCoreDemo.Domain.Entities;
 
-namespace BossNetCoreDemo.Application.Services
-{
-    public class EmployeeService : IEmployeeService
+namespace BossNetCoreDemo.Application.Services;
+
+
+public class EmployeeService : IEmployeeService
+    {public IEnumerable<Employee> Search(string? keyword, int page, int pageSize, out int totalCount)
     {
-        private readonly IEmployeeRepository _employeeRepository;
+        return _repository.Search(keyword, page, pageSize, out totalCount);
+    }
 
-        public EmployeeService(IEmployeeRepository employeeRepository)
-        {
-            _employeeRepository = employeeRepository;
-        }
+    private readonly IEmployeeRepository _repository;
 
-        public async Task<IEnumerable<Employee>> GetAllAsync()
-        {
-            return await _employeeRepository.GetAllAsync();
-        }
+    public EmployeeService(IEmployeeRepository repository)
+    {
+        _repository = repository;
+    }
 
-        public async Task<Employee?> GetByIdAsync(int id)
-        {
-            return await _employeeRepository.GetByIdAsync(id);
-        }
+    public IEnumerable<Employee> GetAll()
+    {
+        return _repository.GetAll();
+    }
 
-        public async Task CreateAsync(Employee employee)
-        {
-            // Business rules can go here later
-            await _employeeRepository.AddAsync(employee);
-        }
+    public Employee? GetById(int id)
+    {
+        return _repository.GetById(id);
+    }
 
-        public async Task UpdateAsync(Employee employee)
-        {
-            await _employeeRepository.UpdateAsync(employee);
-        }
+    public void Add(Employee employee)
+    {
+        _repository.Add(employee);
+    }
 
-        public async Task DeleteAsync(int id)
-        {
-            await _employeeRepository.DeleteAsync(id);
-        }
+    public void Update(Employee employee)
+    {
+        _repository.Update(employee);
+    }
+
+    public void Delete(int id)
+    {
+        _repository.Delete(id);
     }
 }

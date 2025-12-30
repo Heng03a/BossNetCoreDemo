@@ -4,24 +4,58 @@
     ViewData["Title"] = "Employees";
 }
 
-<h2>Employees</h2>
+<div class="container mt-4">
+    <h2>Employees</h2>
 
-<table border="1" cellpadding="5">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Basic Pay</th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var emp in Model)
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Create New</a>
+    </p>
+
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Basic Pay</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>@item.BasicPay</td>
+                <td>
+                    <a class="btn btn-sm btn-warning"
+                       asp-action="Edit"
+                       asp-route-id="@item.Id">Edit</a>
+
+                    <a class="btn btn-sm btn-danger ms-1"
+                       asp-action="Delete"
+                       asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+<form method="get" class="mb-3">
+  <div class="input-group">
+    <input name="q" value="@ViewBag.Query" class="form-control" placeholder="Search by name" />
+    <button class="btn btn-outline-secondary">Search</button>
+  </div>
+</form>
+
+<nav>
+  <ul class="pagination">
+    @for (int i = 1; i <= ViewBag.TotalPages; i++)
     {
-        <tr>
-            <td>@emp.Id</td>
-            <td>@emp.Name</td>
-            <td>@emp.BasicPay</td>
-        </tr>
+      <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+        <a class="page-link" href="?q=@ViewBag.Query&page=@i">@i</a>
+      </li>
     }
-    </tbody>
-</table>
+  </ul>
+</nav>
+

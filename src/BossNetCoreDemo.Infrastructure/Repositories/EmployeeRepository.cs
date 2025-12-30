@@ -3,47 +3,68 @@ using BossNetCoreDemo.Domain.Entities;
 using BossNetCoreDemo.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace BossNetCoreDemo.Infrastructure.Repositories
+namespace BossNetCoreDemo.Infrastructure.Repositories;
+
+public class EmployeeRepository : IEmployeeRepository
 {
-    public class EmployeeRepository : IEmployeeRepository
+    private readonly AppDbContext _context;
+
+    public EmployeeRepository(AppDbContext context)
     {
-        private readonly AppDbContext _context;
+        _context = context;
+    }
 
-        public EmployeeRepository(AppDbContext context)
+    public IEnumerable<Employee> GetAll()
+    {
+        return _context.Employees.AsNoTracking().ToList();
+    }
+
+    public Employee? GetById(int id)
+    {
+        return _context.Employees.AsNoTracking()
+            .FirstOrDefault(e => e.Id == id);
+    }
+
+    public void Add(Employee employee)
+    {
+        _context.Employees.Add(employee);
+        _context.SaveChanges();
+    }
+
+    public void Update(Employee employee)
+    {
+        _context.Employees.Update(employee);
+        _context.SaveChanges();
+    }
+
+    public void Delete(int id)
+    {
+        var entity = _context.Employees.Find(id);
+        if (entity == null) return;
+
+        _context.Employees.Remove(entity);
+        _context.SaveChanges();
+    }
+
+    public IEnumerable<Employee> Search(
+        string? keyword,
+        int page,
+        int pageSize,
+        out int totalCount)
+    {
+        var query = _context.Employees.AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(keyword))
         {
-            _context = context;
+            query = query.Where(e => e.Name.Contains(keyword));
         }
 
-        public async Task<IEnumerable<Employee>> GetAllAsync()
-        {
-            return await _context.Employees.ToListAsync();
-        }
+        totalCount = query.Count();
 
-        public async Task<Employee?> GetByIdAsync(int id)
-        {
-            return await _context.Employees.FindAsync(id);
-        }
-
-        public async Task AddAsync(Employee employee)
-        {
-            _context.Employees.Add(employee);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateAsync(Employee employee)
-        {
-            _context.Employees.Update(employee);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            var employee = await _context.Employees.FindAsync(id);
-            if (employee != null)
-            {
-                _context.Employees.Remove(employee);
-                await _context.SaveChangesAsync();
-            }
-        }
+        return query
+            .OrderBy(e => e.Id)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
     }
 }

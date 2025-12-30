@@ -1,13 +1,19 @@
 using BossNetCoreDemo.Domain.Entities;
 
-namespace BossNetCoreDemo.Application.Interfaces
+namespace BossNetCoreDemo.Application.Interfaces;
+
+public interface IEmployeeRepository
 {
-    public interface IEmployeeRepository
-    {
-        Task<IEnumerable<Employee>> GetAllAsync();
-        Task<Employee?> GetByIdAsync(int id);
-        Task AddAsync(Employee employee);
-        Task UpdateAsync(Employee employee);
-        Task DeleteAsync(int id);
-    }
+    IEnumerable<Employee> GetAll();
+    Employee? GetById(int id);
+
+    void Add(Employee employee);
+    void Update(Employee employee);
+    void Delete(int id);
+
+    IEnumerable<Employee> Search(
+        string? keyword,
+        int page,
+        int pageSize,
+        out int totalCount);
 }

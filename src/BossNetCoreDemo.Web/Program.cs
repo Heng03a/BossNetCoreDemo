@@ -1,13 +1,16 @@
-using BossNetCoreDemo.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 using BossNetCoreDemo.Application.Interfaces;
 using BossNetCoreDemo.Application.Services;
+using BossNetCoreDemo.Infrastructure.Data;
 using BossNetCoreDemo.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 Console.WriteLine(
     builder.Configuration.GetConnectionString("DefaultConnection")
 );
+
+
 
 // MVC
 builder.Services.AddControllersWithViews();
